@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id('idcategorie')->primary();
-            $table->string('libelle_categorie');
-            $table->integer('etat_categorie')->default(0)->comment('0 = Active; 1 = Desactive');
+        Schema::create('objectifs', function (Blueprint $table) {
+            $table->id('idobjectif')->primary();
+            $table->date('date_objectif');
+            $table->integer('objectif');
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('idservice')->on('services')->onDelete('cascade');
+            $table->unsignedBigInteger('responsable_id');
+            $table->foreign('responsable_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,10 +28,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropForeign(['service_id']);
+        Schema::dropIfExists('objectifs');
+        Schema::table('objectifs', function (Blueprint $table) {
+            $table->dropForeign(['service_id', 'responsable_id']);
             $table->dropColumn('service_id');
+            $table->dropColumn('responsable_id');
         });
     }
 };

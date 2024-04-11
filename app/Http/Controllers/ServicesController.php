@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Services;
 
 class ServicesController extends Controller
 {
@@ -11,7 +12,10 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        //
+
+        $services = Services::all();
+
+        return view('services.services', compact('services'));
     }
 
     /**
@@ -27,7 +31,26 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $roles = [
+            'libelle' => 'required',
+            'code' => 'required',
+            'valeur' => 'required',
+        ];
+        $customMessages = [
+            'libelle.required' => "Veuillz saisir le libelle de la devise",
+            'code.required' => "Veuillez saisir le code de la devise",
+            'valeur.required' => "Veuillez saisir la valeur de la devise",
+        ];
+        $this->validate($request, $roles, $customMessages);
+
+        $devise = new Devises();
+        $devise->id_devise =  Str::uuid();
+        $devise->libelle_devise = $request->libelle;
+        $devise->code_devise = $request->code;
+        $devise->valeur_devise = $request->valeur;
+        $devise->save();
+
+        return back()->with('succes', $request->libelle . " a été ajoué");
     }
 
     /**
@@ -51,7 +74,28 @@ class ServicesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $roles = [
+            'libelle' => 'required',
+            'code' => 'required',
+            'valeur' => 'required',
+        ];
+        $customMessages = [
+            'libelle.required' => "Veuillz saisir le libelle de la devise",
+            'code.required' => "Veuillez saisir le code de la devise",
+            'valeur.required' => "Veuillez saisir la valeur de la devise",
+        ];
+        $this->validate($request, $roles, $customMessages);
+
+        Devises::where('id_devise', $id)
+            ->update(
+                [
+                    'libelle_devise' => $request->libelle,
+                    'code_devise' => $request->code,
+                    'valeur_devise' => $request->valeur,
+                ]
+            );
+
+        return back()->with('succes', "La modification a été effectué");
     }
 
     /**
@@ -59,6 +103,8 @@ class ServicesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Devises::findOrFail($id)->delete();
+
+        return back()->with('succes', "La suppression a été efecctué");
     }
 }

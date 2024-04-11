@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
-            $table->id();
+            $table->id('idservice')->primary();
+            $table->string('libelle_service');
+            $table->integer('etat_service')->default(0)->comment('0 = Active; 1 = Desactive');
             $table->timestamps();
         });
     }

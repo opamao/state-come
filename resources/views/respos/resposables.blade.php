@@ -24,7 +24,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header bg-primary text-white">
-                            <h2 class="h6 modal-title">Ajout d'un responsable</h2>
+                            <h2 class="h6 modal-title">AJOUT D'UN RESPONSABLE</h2>
                             <button style="background-color: white;" type="button" class="btn-close"
                                 data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>

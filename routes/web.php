@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\ServicesController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,12 +17,11 @@ Route::get('/objectifsdg', function () {
 Route::get('/objectifsrespo', function () {
     return view('objectifs.objectif-respo');
 });
-Route::get('/services', function () {
-    return view('services.services');
-});
 Route::get('/categories', function () {
     return view('services.categories');
 });
 Route::get('/details', function () {
     return view('respos.details');
 });
+
+Route::resource('services', ServicesController::class);
