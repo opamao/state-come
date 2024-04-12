@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ServicesController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,11 +19,9 @@ Route::get('/objectifsdg', function () {
 Route::get('/objectifsrespo', function () {
     return view('objectifs.objectif-respo');
 });
-Route::get('/categories', function () {
-    return view('services.categories');
-});
 Route::get('/details', function () {
     return view('respos.details');
 });
 
 Route::resource('services', ServicesController::class);
+Route::resource('categories', CategoriesController::class);

@@ -32,25 +32,18 @@ class ServicesController extends Controller
     public function store(Request $request)
     {
         $roles = [
-            'libelle' => 'required',
-            'code' => 'required',
-            'valeur' => 'required',
+            'service' => 'required',
         ];
         $customMessages = [
-            'libelle.required' => "Veuillz saisir le libelle de la devise",
-            'code.required' => "Veuillez saisir le code de la devise",
-            'valeur.required' => "Veuillez saisir la valeur de la devise",
+            'service.required' => "Veuillez saisir le libelle du service",
         ];
         $this->validate($request, $roles, $customMessages);
 
-        $devise = new Devises();
-        $devise->id_devise =  Str::uuid();
-        $devise->libelle_devise = $request->libelle;
-        $devise->code_devise = $request->code;
-        $devise->valeur_devise = $request->valeur;
+        $devise = new Services();
+        $devise->libelle_service = $request->service;
         $devise->save();
 
-        return back()->with('succes', $request->libelle . " a été ajoué");
+        return back()->with('succes', $request->service . " a été ajoué");
     }
 
     /**
@@ -75,23 +68,18 @@ class ServicesController extends Controller
     public function update(Request $request, string $id)
     {
         $roles = [
-            'libelle' => 'required',
-            'code' => 'required',
-            'valeur' => 'required',
+            'service' => 'required',
         ];
         $customMessages = [
-            'libelle.required' => "Veuillz saisir le libelle de la devise",
-            'code.required' => "Veuillez saisir le code de la devise",
-            'valeur.required' => "Veuillez saisir la valeur de la devise",
+            'service.required' => "Veuillez saisir le libelle du service",
         ];
         $this->validate($request, $roles, $customMessages);
 
-        Devises::where('id_devise', $id)
+        Services::where('idservice', $id)
             ->update(
                 [
-                    'libelle_devise' => $request->libelle,
-                    'code_devise' => $request->code,
-                    'valeur_devise' => $request->valeur,
+                    'libelle_service' => $request->service,
+                    'etat_service' => $request->statut,
                 ]
             );
 
@@ -103,7 +91,7 @@ class ServicesController extends Controller
      */
     public function destroy(string $id)
     {
-        Devises::findOrFail($id)->delete();
+        Services::findOrFail($id)->delete();
 
         return back()->with('succes', "La suppression a été efecctué");
     }
