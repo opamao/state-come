@@ -28,10 +28,9 @@
                             <button style="background-color: white;" type="button" class="btn-close"
                                 data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form role="for" action="#" method="POST">
+                        <form role="for" action="{{ route('respos.store') }}" method="POST">
                             @csrf
                             <div class="modal-body">
-                                {{-- le mot de passe est genere automatiquement --}}
                                 <div class="mb-3">
                                     <input type="text" required class="form-control" name="nom" placeholder="Son nom"
                                         aria-describedby="emailHelp">
@@ -78,7 +77,7 @@
                                 <button style="background-color: white;" type="button" class="btn-close"
                                     data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form role="for" action="#" method="POST">
+                            <form role="for" action="{{ url('details') }}" method="POST">
                                 @csrf
                                 <div class="modal-body">
                                     {{-- le mot de passe est genere automatiquement --}}
@@ -86,14 +85,20 @@
                                         <select name="respo" required class="form-select"
                                             aria-label="Default select example">
                                             <option value="" selected="">Responsable</option>
-                                            <option value="1">Active</option>
+                                            @foreach ($responsables as $respo)
+                                                <option value="{{ $respo->id }}">{{ $respo->name }}
+                                                    {{ $respo->prenom }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <select name="service" required class="form-select"
                                             aria-label="Default select example">
                                             <option value="" selected="">Service</option>
-                                            <option value="1">Active</option>
+                                            @foreach ($services as $item)
+                                                <option value="{{ $item->idservice }}">{{ $item->libelle_service }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="mb-3">
@@ -120,170 +125,143 @@
             </div>
         </div>
     </div>
+
+    @include('layouts.statut')
+
     <div class="card card-body border-0 shadow table-wrapper table-responsive">
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th class="border-gray-200">#</th>
                     <th class="border-gray-200">Responsable</th>
+                    <th class="border-gray-200">Contact</th>
                     <th class="border-gray-200">Objectif</th>
                     <th class="border-gray-200">Réalisé</th>
-                    {{-- La couleur du pourcentage varie comme statut --}}
-                    <th class="border-gray-200">%Cumulé</th>
-                    <th class="border-gray-200">Statut</th>
+                    <th class="border-gray-200">%</th>
                     <th class="border-gray-200">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <a href="#" class="fw-bold">
-                            456478
-                        </a>
-                    </td>
-                    <td>
-                        <span class="fw-normal">Platinum Subscription Plan</span>
-                    </td>
-                    <td><span class="fw-normal">1 May 2020</span></td>
-                    <td><span class="fw-normal">1 Jun 2020</span></td>
-                    <td><span class="fw-bold">$799,00</span></td>
-                    <td><span class="fw-bold text-warning">Due</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="icon icon-sm">
-                                    <span class="fas fa-ellipsis-h icon-dark"></span>
-                                </span>
-                                <span class="visually-hidden">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu py-0">
-                                <a class="dropdown-item rounded-top" href="#"><span
-                                        class="fas fa-eye me-2"></span>View Details</a>
-                                <a class="dropdown-item" href="#"><span class="fas fa-edit me-2"></span>Edit</a>
-                                <a class="dropdown-item text-danger rounded-bottom" href="#"><span
-                                        class="fas fa-trash-alt me-2"></span>Remove</a>
+                @foreach ($responsables as $liste)
+                    <tr>
+                        @php
+                            $objectif = \App\Models\Objectifs::where('responsable_id', $liste->id)->sum('objectif');
+                            $saisir = \App\Models\SaisirObjectif::where('responsable_id', $liste->id)->sum('quantite');
+                        @endphp
+                        <td>
+                            {{ $liste->id }}
+                        </td>
+                        <td>
+                            <span class="fw-normal">{{ $liste->name }} {{ $liste->prenom }}</span>
+                        </td>
+                        <td>
+                            <span class="fw-normal">{{ $liste->phone }} <br> {{ $liste->email }}</span>
+                        </td>
+                        <td>
+                            <span class="fw-bold">{{ $objectif }}</span>
+                        </td>
+                        <td>
+                            <span class="fw-bold">{{ $saisir }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex">
+                                @if (($objectif * $saisir) / 100 <= 50)
+                                    <svg class="icon icon-xs text-danger me-2" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                @else
+                                    <svg class="icon icon-xs text-success me-2" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                @endif
+                                {{ ($objectif * $saisir) / 100 }}%
                             </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="#" class="fw-bold">
-                            456423
-                        </a>
-                    </td>
-                    <td>
-                        <span class="fw-normal">Platinum Subscription Plan</span>
-                    </td>
-                    <td><span class="fw-normal">1 Apr 2020</span></td>
-                    <td><span class="fw-normal">1 May 2020</span></td>
-                    <td><span class="fw-bold">$799,00</span></td>
-                    <td><span class="fw-bold text-success">Paid</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="icon icon-sm">
-                                    <span class="fas fa-ellipsis-h icon-dark"></span>
-                                </span>
-                                <span class="visually-hidden">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu py-0">
-                                <a class="dropdown-item rounded-top" href="#"><span
-                                        class="fas fa-eye me-2"></span>View Details</a>
-                                <a class="dropdown-item" href="#"><span class="fas fa-edit me-2"></span>Edit</a>
-                                <a class="dropdown-item text-danger rounded-bottom" href="#"><span
-                                        class="fas fa-trash-alt me-2"></span>Remove</a>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="#" class="fw-bold">
-                            453673
-                        </a>
-                    </td>
-                    <td>
-                        <span class="fw-normal">Gold Subscription Plan</span>
-                    </td>
-                    <td><span class="fw-normal">1 Oct 2019</span></td>
-                    <td><span class="fw-normal">1 Nov 2019</span></td>
-                    <td><span class="fw-bold">$533,42</span></td>
-                    <td><span class="fw-bold text-danger">Cancelled</span></td>
-                    <td>
-                        <a class="btn btn-sm btn-tertiary" href="{{ url('details') }}" type="button">Voir</a>
-                        <button class="btn btn-sm btn-info" type="button" data-bs-toggle="modal"
-                            data-bs-target="#modal-edit">Modifier</button>
-                        <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog"
-                            aria-labelledby="modal-edit" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-info text-white">
-                                        <h2 class="h6 modal-title">MODIFICATION</h2>
-                                        <button style="background-color: white;" type="button" class="btn-close"
-                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-tertiary" href="{{ route('respos.show', $liste->id) }}"
+                                type="button">Voir</a>
+                            <button class="btn btn-sm btn-info" type="button" data-bs-toggle="modal"
+                                data-bs-target="#modal-edit{{ $liste->id }}">Modifier</button>
+                            <div class="modal fade" id="modal-edit{{ $liste->id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="modal-edit{{ $liste->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-info text-white">
+                                            <h2 class="h6 modal-title">MODIFICATION</h2>
+                                            <button style="background-color: white;" type="button" class="btn-close"
+                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form role="for" action="{{ route('respos.update', $liste->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <input type="text" value="{{ $liste->name }}" required
+                                                        class="form-control" name="nom" placeholder="Son nom"
+                                                        aria-describedby="emailHelp">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <input type="text" value="{{ $liste->prenom }}" required
+                                                        class="form-control" name="prenom" placeholder="Son prénom"
+                                                        aria-describedby="emailHelp">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <input value="{{ $liste->phone }}" placeholder="Son téléphone"
+                                                        type="tel" required class="form-control" name="phone"
+                                                        aria-describedby="emailHelp">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <input value="{{ $liste->email }}" placeholder="Son adresse email"
+                                                        type="email" required class="form-control" name="email"
+                                                        id="email" aria-describedby="emailHelp">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-info">Modifier</button>
+                                                <button type="button" class="btn btn-link text-gray-600 ms-auto"
+                                                    data-bs-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <form role="for" action="#" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <input type="text" required class="form-control" name="nom"
-                                                    placeholder="Son nom" aria-describedby="emailHelp">
-                                            </div>
-                                            <div class="mb-3">
-                                                <input type="text" required class="form-control" name="prenom"
-                                                    placeholder="Son prénom" aria-describedby="emailHelp">
-                                            </div>
-                                            <div class="mb-3">
-                                                <input placeholder="Son téléphone" type="tel" required
-                                                    class="form-control" name="phone" aria-describedby="emailHelp">
-                                            </div>
-                                            <div class="mb-3">
-                                                <input placeholder="Son adresse email" type="email" required
-                                                    class="form-control" name="email" id="email"
-                                                    aria-describedby="emailHelp">
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-info">Modifier</button>
-                                            <button type="button" class="btn btn-link text-gray-600 ms-auto"
-                                                data-bs-dismiss="modal">Annuler</button>
-                                        </div>
-                                    </form>
                                 </div>
                             </div>
-                        </div>
-                        <button class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal"
-                            data-bs-target="#modal-delete">Supprimer</button>
-                        <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog"
-                            aria-labelledby="modal-delete" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h2 class="h6 modal-title">SUPPRESSION</h2>
-                                        <button style="background-color: white;" type="button" class="btn-close"
-                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal"
+                                data-bs-target="#modal-delete{{ $liste->id }}">Supprimer</button>
+                            <div class="modal fade" id="modal-delete{{ $liste->id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="modal-delete{{ $liste->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h2 class="h6 modal-title">SUPPRESSION</h2>
+                                            <button style="background-color: white;" type="button" class="btn-close"
+                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form role="for" action="{{ route('respos.destroy', $liste->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <div class="modal-body">
+                                                Êtes-vous sûre de vouloir supprimer?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                <button type="button" class="btn btn-link text-gray-600 ms-auto"
+                                                    data-bs-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <form role="for" action="#" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <div class="modal-body">
-                                            Êtes-vous sûre de vouloir supprimer?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-danger">Supprimer</button>
-                                            <button type="button" class="btn btn-link text-gray-600 ms-auto"
-                                                data-bs-dismiss="modal">Annuler</button>
-                                        </div>
-                                    </form>
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

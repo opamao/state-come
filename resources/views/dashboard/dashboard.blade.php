@@ -22,13 +22,13 @@
                             </div>
                             <div class="d-sm-none">
                                 <h2 class="h5">Commerciaux</h2>
-                                <h3 class="fw-extrabold mb-1">5</h3>
+                                <h3 class="fw-extrabold mb-1">{{ $nbreCome }}</h3>
                             </div>
                         </div>
                         <div class="col-12 col-xl-7 px-xl-0">
                             <div class="d-none d-sm-block">
                                 <h2 class="h6 text-gray-400 mb-0">Commerciaux</h2>
-                                <h3 class="fw-extrabold mb-2">5</h3>
+                                <h3 class="fw-extrabold mb-2">{{ $nbreCome }}</h3>
                             </div>
                         </div>
                     </div>
@@ -51,13 +51,13 @@
                             </div>
                             <div class="d-sm-none">
                                 <h2 class="fw-extrabold h5">Objectifs</h2>
-                                <h3 class="mb-1">10 0000</h3>
+                                <h3 class="mb-1">{{ $sommeObjectif }}</h3>
                             </div>
                         </div>
                         <div class="col-12 col-xl-7 px-xl-0">
                             <div class="d-none d-sm-block">
                                 <h2 class="h6 text-gray-400 mb-0">Objectifs</h2>
-                                <h3 class="fw-extrabold mb-2">10 000</h3>
+                                <h3 class="fw-extrabold mb-2">{{ $sommeObjectif }}</h3>
                             </div>
                         </div>
                     </div>
@@ -80,13 +80,13 @@
                             </div>
                             <div class="d-sm-none">
                                 <h2 class="fw-extrabold h5"> Réalisés</h2>
-                                <h3 class="mb-1">5 000</h3>
+                                <h3 class="mb-1">{{ $sommeSaisirObjectif }}</h3>
                             </div>
                         </div>
                         <div class="col-12 col-xl-7 px-xl-0">
                             <div class="d-none d-sm-block">
                                 <h2 class="h6 text-gray-400 mb-0"> Réalisés</h2>
-                                <h3 class="fw-extrabold mb-2">5 000</h3>
+                                <h3 class="fw-extrabold mb-2">{{ $sommeSaisirObjectif }}</h3>
                             </div>
                         </div>
                     </div>
@@ -108,29 +108,21 @@
                                 </svg>
                             </div>
                             <div class="d-sm-none">
-                                <h3 class="mb-1">50.00%</h3>
+                                <h4
+                                    class="mb-1 @if (($sommeObjectif * $sommeSaisirObjectif) / 100 <= 50) text-danger
+                                @else
+                                text-success @endif ">
+                                    {{ ($sommeObjectif * $sommeSaisirObjectif) / 100 }}%</h4>
                             </div>
                         </div>
                         <div class="col-6 col-xl-4 px-xl-0">
                             <div class="d-none d-sm-block">
-                                <h3 class="fw-extrabold mb-2">50.00%</h3>
-                            </div>
-                            <div class="small d-flex mt-1">
-                                <div>
-                                    <svg class="icon icon-xs text-danger" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                    <span class="text-danger fw-bolder">2%</span>
-                                </div>
-                                <div> <svg class="icon icon-xs text-success" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                                            clip-rule="evenodd"></path>
-                                    </svg><span class="text-success fw-bolder">4%</span></div>
+                                <h4
+                                    class="fw-extrabold @if (($sommeObjectif * $sommeSaisirObjectif) / 100 <= 50) text-danger
+                                @else
+                                text-success @endif mb-2">
+                                    {{ ($sommeObjectif * $sommeSaisirObjectif) / 100 }}%
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -146,7 +138,7 @@
                         <h2 class="fs-5 fw-bold mb-0">Commerciaux</h2>
                     </div>
                     <div class="col text-end">
-                        <a href="#" class="btn btn-sm btn-primary">Tout voir</a>
+                        <a href="{{ url('respos') }}" class="btn btn-sm btn-primary">Tout voir</a>
                     </div>
                 </div>
             </div>
@@ -161,50 +153,51 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th class="text-gray-900" scope="row">
-                                /demo/admin/index.html
-                            </th>
-                            <td class="fw-bolder text-gray-500">
-                                3,225
-                            </td>
-                            <td class="fw-bolder text-gray-500">
-                                $20
-                            </td>
-                            <td class="fw-bolder text-gray-500">
-                                <div class="d-flex">
-                                    <svg class="icon icon-xs text-danger me-2" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                    42,55%
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="text-gray-900" scope="row">
-                                /demo/admin/forms.html
-                            </th>
-                            <td class="fw-bolder text-gray-500">
-                                2,987
-                            </td>
-                            <td class="fw-bolder text-gray-500">
-                                0
-                            </td>
-                            <td class="fw-bolder text-gray-500">
-                                <div class="d-flex">
-                                    <svg class="icon icon-xs text-success me-2" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                    43,24%
-                                </div>
-                            </td>
-                        </tr>
+                        @foreach ($listCome as $list)
+                            <tr>
+                                @php
+                                    $objectif = \App\Models\Objectifs::where('responsable_id', $list->id)->sum(
+                                        'objectif',
+                                    );
+                                    $saisir = \App\Models\SaisirObjectif::where('responsable_id', $list->id)->sum(
+                                        'quantite',
+                                    );
+                                @endphp
+                                <th class="text-gray-900" scope="row">
+                                    {{ $list->name }} {{ $list->prenom }}
+                                </th>
+                                <td class="fw-bolder text-gray-500">
+                                    @php
+                                        echo $objectif;
+                                    @endphp
+                                </td>
+                                <td class="fw-bolder text-gray-500">
+                                    @php
+                                        echo $saisir;
+                                    @endphp
+                                </td>
+                                <td class="fw-bolder text-gray-500">
+                                    <div class="d-flex">
+                                        @if (($objectif * $saisir) / 100 <= 50)
+                                            <svg class="icon icon-xs text-danger me-2" fill="currentColor"
+                                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                        @else
+                                            <svg class="icon icon-xs text-success me-2" fill="currentColor"
+                                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                        @endif
+                                        {{ ($objectif * $saisir) / 100 }}%
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

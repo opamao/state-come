@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreign('categorie_id')->references('idcategorie')->on('categories')->onDelete('cascade');
             $table->unsignedBigInteger('objectif_id');
             $table->foreign('objectif_id')->references('idobjectif')->on('objectifs')->onDelete('cascade');
+            $table->unsignedBigInteger('responsable_id');
+            $table->foreign('responsable_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,10 +34,11 @@ return new class extends Migration
     {
         Schema::dropIfExists('objectifs_ajout');
         Schema::table('objectifs_ajout', function (Blueprint $table) {
-            $table->dropForeign(['service_id', 'categorie_id', 'objectif_id']);
+            $table->dropForeign(['service_id', 'categorie_id', 'objectif_id', 'responsable_id']);
             $table->dropColumn('service_id');
             $table->dropColumn('categorie_id');
             $table->dropColumn('objectif_id');
+            $table->dropColumn('responsable_id');
         });
     }
 };

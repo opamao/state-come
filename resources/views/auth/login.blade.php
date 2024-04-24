@@ -39,19 +39,16 @@
     <!-- Volt CSS -->
     <link type="text/css" href="{{ asset('css/volt.css') }}" rel="stylesheet">
 
-    <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
-
 </head>
 
 <body>
-
-    <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
 
     <main>
 
         <!-- Section -->
         <section class="vh-lg-100 mt-5 mt-lg-0 bg-soft d-flex align-items-center">
             <div class="container">
+                @include('layouts.statut')
                 <div class="row justify-content-center form-bg-image"
                     data-background-lg="{{ asset('assets/img/illustrations/signin.svg') }}">
                     <div class="col-12 d-flex align-items-center justify-content-center">
@@ -59,9 +56,8 @@
                             <div class="text-center text-md-center mb-4 mt-md-0">
                                 <h1 class="mb-0 h3">Connectez-vous à notre plateforme</h1>
                             </div>
-                            <form action="{{ url('dashboard') }}" class="mt-4" method="get">
+                            <form action="{{ url('custom-login') }}" class="mt-4" method="post">
                                 @csrf
-                                <!-- Form -->
                                 <div class="form-group mb-4">
                                     <label for="email">Votre e-mail</label>
                                     <div class="input-group">
@@ -79,9 +75,7 @@
                                             placeholder="example@company.com" id="email" autofocus required>
                                     </div>
                                 </div>
-                                <!-- End of Form -->
                                 <div class="form-group">
-                                    <!-- Form -->
                                     <div class="form-group mb-4">
                                         <label for="password">Votre mot de passe</label>
                                         <div class="input-group">
@@ -97,7 +91,6 @@
                                                 class="form-control" id="password" required>
                                         </div>
                                     </div>
-                                    <!-- End of Form -->
                                 </div>
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-gray-800">Se connecter</button>

@@ -1,3 +1,9 @@
+@if (!Auth::check())
+    @php
+        header('Location: /index');
+        exit();
+    @endphp
+@endif
 <!DOCTYPE html>
 <html lang="fr">
 
