@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\Objectifs;
 use App\Models\SaisirObjectif;
 use App\Models\Services;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SaisirObjectifController extends Controller
 {
@@ -14,18 +16,27 @@ class SaisirObjectifController extends Controller
      */
     public function index()
     {
-        $objectifs = SaisirObjectif::join('objectifs', 'objectifs_ajout.objectif_id', '=', 'objectifs.idobjectif')
-            ->join('services', 'objectifs_ajout.service_id', '=', 'services.idservice')
-            ->join('categories', 'objectifs_ajout.categorie_id', '=', 'categories.idcategorie')
+        // $objectifs = SaisirObjectif::join('objectifs', 'objectifs_ajout.objectif_id', '=', 'objectifs.idobjectif')
+        //     ->join('services', 'objectifs_ajout.service_id', '=', 'services.idservice')
+        //     ->join('categories', 'objectifs_ajout.categorie_id', '=', 'categories.idcategorie')
+        //     ->select(
+        //         'objectifs.objectif',
+        //         'objectifs.idobjectif',
+        //         'objectifs_ajout.idobjectifa',
+        //         'objectifs_ajout.date_objectifa',
+        //         'objectifs_ajout.quantite',
+        //         'services.libelle_service',
+        //         'categories.libelle_categorie',
+        //     )
+        //     ->get();
+
+        $objectifs = Objectifs::join("services", "objectifs.service_id", "=", "services.idservice")
             ->select(
-                'objectifs.objectif',
-                'objectifs.idobjectif',
-                'objectifs_ajout.idobjectifa',
-                'objectifs_ajout.date_objectifa',
-                'objectifs_ajout.quantite',
-                'services.libelle_service',
-                'categories.libelle_categorie',
+                "services.libelle_service",
+                "objectifs.*",
             )
+            ->where('services.etat_service', 0)
+            ->where("objectifs.responsable_id", Auth::user()->id)
             ->get();
 
         $services = Services::where('etat_service', '=', 0)->get();
@@ -54,7 +65,6 @@ class SaisirObjectifController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -62,7 +72,7 @@ class SaisirObjectifController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('objectifs.detatil-objectif');
     }
 
     /**

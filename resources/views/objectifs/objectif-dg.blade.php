@@ -25,7 +25,8 @@
                                 $('#categorie').empty();
                                 $('#categorie').focus;
                                 $('#categorie').append(
-                                    '<option value="">-- Sélectionnez catégorie --</option>');
+                                    '<option value="">-- Sélectionnez catégorie --</option>'
+                                );
                                 $.each(data, function(key, value) {
                                     $('select[name="categorie"]').append(
                                         '<option value="' + key + '">' + value
@@ -72,7 +73,7 @@
                                 <button style="background-color: white;" type="button" class="btn-close"
                                     data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form role="for" action="#" method="POST">
+                            <form role="for" action="{{ url('') }}" method="POST">
                                 {{ csrf_field() }}
                                 <div class="modal-body">
                                     <div class="mb-3">
@@ -118,12 +119,9 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th class="border-gray-200">#</th>
                     <th class="border-gray-200">Service</th>
-                    <th class="border-gray-200">Catégorie</th>
                     <th class="border-gray-200">Objectif</th>
                     <th class="border-gray-200">Réalisé</th>
-                    {{-- La couleur du pourcentage varie comme statut --}}
                     <th class="border-gray-200">%Cumulé</th>
                     <th class="border-gray-200">Statut</th>
                     <th class="border-gray-200">Action</th>
@@ -132,86 +130,20 @@
             <tbody>
                 @foreach ($objectifs as $liste)
                     <tr>
-                        <td></td>
-                        <td>
-                            <span class="fw-normal">Gold Subscription Plan</span>
-                        </td>
                         <td>
                             <span class="fw-normal">Gold Subscription Plan</span>
                         </td>
                         <td><span class="fw-normal">1 Oct 2019</span></td>
                         <td><span class="fw-normal">1 Nov 2019</span></td>
                         <td><span class="fw-bold">$533,42</span></td>
-                        <td><span class="fw-bold text-danger">Cancelled</span></td>
                         <td>
-                            <button class="btn btn-sm btn-info" type="button" data-bs-toggle="modal"
-                                data-bs-target="#modal-edit">Modifier</button>
-                            <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog"
-                                aria-labelledby="modal-edit" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-info text-white">
-                                            <h2 class="h6 modal-title">MODIFICATION</h2>
-                                            <button style="background-color: white;" type="button" class="btn-close"
-                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form role="for" action="#" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <input type="text" required class="form-control" name="nom"
-                                                        placeholder="Son nom" aria-describedby="emailHelp">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <input type="text" required class="form-control" name="prenom"
-                                                        placeholder="Son prénom" aria-describedby="emailHelp">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <input placeholder="Son téléphone" type="tel" required
-                                                        class="form-control" name="phone" aria-describedby="emailHelp">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <input placeholder="Son adresse email" type="email" required
-                                                        class="form-control" name="email" id="email"
-                                                        aria-describedby="emailHelp">
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-info">Modifier</button>
-                                                <button type="button" class="btn btn-link text-gray-600 ms-auto"
-                                                    data-bs-dismiss="modal">Annuler</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal"
-                                data-bs-target="#modal-delete">Supprimer</button>
-                            <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog"
-                                aria-labelledby="modal-delete" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-danger text-white">
-                                            <h2 class="h6 modal-title">SUPPRESSION</h2>
-                                            <button style="background-color: white;" type="button" class="btn-close"
-                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form role="for" action="#" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <div class="modal-body">
-                                                Êtes-vous sûre de vouloir supprimer?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-danger">Supprimer</button>
-                                                <button type="button" class="btn btn-link text-gray-600 ms-auto"
-                                                    data-bs-dismiss="modal">Annuler</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                            <span class="fw-bold text-warning">Encours</span>
+                            <span class="fw-bold text-danger">Pas encore</span>
+                            <span class="fw-bold text-success">Fait</span>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-info"
+                                href="{{ route('objectifsdg.show', $liste->idobjectif) }}">Détail</a>
                         </td>
                     </tr>
                 @endforeach
