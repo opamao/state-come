@@ -22,6 +22,8 @@ class User extends Authenticatable
         'prenom',
         'phone',
         'type_user',
+        'directeur_id',
+        'entreprise_id',
         'password',
     ];
 

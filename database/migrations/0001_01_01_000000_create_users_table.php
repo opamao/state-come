@@ -19,7 +19,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('type_user')->comment('directeur, responsable');
+            $table->string('type_user')->comment('super, admin, directeur, responsable');
+            $table->unsignedBigInteger('directeur_id')->default(0)->nullable();
+            $table->foreign('directeur_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('entreprise_id')->default(0)->nullable();
+            $table->foreign('entreprise_id')->references('identre')->on('entreprises')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -48,5 +52,10 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['directeur_id','entreprise_id']);
+            $table->dropColumn('directeur_id');
+            $table->dropColumn('entreprise_id');
+        });
     }
 };

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id('idservice')->primary();
             $table->string('libelle_service');
             $table->integer('etat_service')->default(0)->comment('0 = Active; 1 = Desactive');
+            $table->unsignedBigInteger('entreprise_id');
+            $table->foreign('entreprise_id')->references('identre')->on('entreprises')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,5 +27,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('services');
+        Schema::table('services', function (Blueprint $table) {
+            $table->dropForeign(['entreprise_id']);
+            $table->dropColumn('entreprise_id');
+        });
     }
 };

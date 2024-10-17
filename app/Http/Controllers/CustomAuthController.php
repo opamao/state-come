@@ -17,6 +17,21 @@ class CustomAuthController extends Controller
         return view("auth.login");
     }
 
+    public function createUser()
+    {
+        // type 1 = directeur, type 2 = responsable, type 3 = admin, type 4 = super,
+        User::create([
+            'name' => "Yapi",
+            'email' => "theodoreyapi@gmail.com",
+            'phone' => "0585831647",
+            'prenom' => "kouassi",
+            'type_user' => "super",
+            'directeur_id' => null,
+            'entreprise_id' => null,
+            'password' => Hash::make("1234567890"),
+        ]);
+    }
+
     public function customLogin(Request $request)
     {
         $roles = [
@@ -39,12 +54,13 @@ class CustomAuthController extends Controller
 
             if (Auth::user()->type_user == 'responsable') {
 
-                return redirect()->intended('objectifsdg')->withSuccess('Bon retour');
-
+                return redirect()->intended('comme')->withSuccess('Bon retour');
             } else if (Auth::user()->type_user == 'directeur') {
 
                 return redirect()->intended('dashboard')->withSuccess('Bon retour');
+            }else if (Auth::user()->type_user == 'super') {
 
+                return redirect()->intended('entreprise')->withSuccess('Bon retour');
             }
 
             return redirect('index')->withErrors(["Vous n'êtes pas autoriser"]);
