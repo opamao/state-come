@@ -96,12 +96,10 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th class="border-gray-200">Logo   </th>
+                    <th class="border-gray-200">Logo</th>
                     <th class="border-gray-200">Représentant</th>
                     <th class="border-gray-200">Entreprise</th>
-                    <th class="border-gray-200">Localisation</th>
                     <th class="border-gray-200">Adresse</th>
-                    <th class="border-gray-200">Contact</th>
                     <th class="border-gray-200">Action</th>
                 </tr>
             </thead>
@@ -125,65 +123,80 @@
                             <span class="fw-normal">{{ $liste->libelle_entre }}</span>
                         </td>
                         <td>
-                            <span class="fw-bold">{{ $liste->localisation_entre }}</span>
-                        </td>
-                        <td>
-                            <span class="fw-bold">{{ $liste->adresse_entre }}</span>
-                        </td>
-                        <td>
                             <div class="d-flex">
+                                {{ $liste->localisation_entre }}
+                                <br>
+                                {{ $liste->adresse_entre }}
+                                <br>
                                 {{ $liste->contact_entre }}
                             </div>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-tertiary" href="{{ route('respos.show', $liste->identre) }}"
-                                type="button">Voir</a>
-                            <button class="btn btn-sm btn-info" type="button" data-bs-toggle="modal"
-                                data-bs-target="#modal-edit{{ $liste->identre }}">Modifier</button>
+                            <button class="btn btn-sm btn-tertiary" type="button" data-bs-toggle="modal"
+                                data-bs-target="#modal-edit{{ $liste->identre }}">Voir</button>
                             <div class="modal fade" id="modal-edit{{ $liste->identre }}" tabindex="-1" role="dialog"
                                 aria-labelledby="modal-edit{{ $liste->identre }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header bg-info text-white">
-                                            <h2 class="h6 modal-title">MODIFICATION</h2>
+                                        <div class="modal-header bg-tertiary text-white">
+                                            <h2 class="h6 modal-title">DÉTAILS</h2>
                                             <button style="background-color: white;" type="button" class="btn-close"
                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <form role="for" action="{{ route('respos.update', $liste->identre) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <input type="text" value="{{ $liste->name }}" required
-                                                        class="form-control" name="nom" placeholder="Son nom"
-                                                        aria-describedby="emailHelp">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <input type="text" value="{{ $liste->prenom }}" required
-                                                        class="form-control" name="prenom" placeholder="Son prénom"
-                                                        aria-describedby="emailHelp">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <input value="{{ $liste->phone }}" placeholder="Son téléphone"
-                                                        type="tel" required class="form-control" name="phone"
-                                                        aria-describedby="emailHelp">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <input value="{{ $liste->email }}" placeholder="Son adresse email"
-                                                        type="email" required class="form-control" name="email"
-                                                        id="email" aria-describedby="emailHelp">
-                                                </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <small>Logo</small>
+                                                <br>
+                                                <img style="height: 150px; width: 150px;" class="avatar rounded-circle"
+                                                    src="{{ asset('logoentreprise' . '/' . $liste->logo_entre) }}"
+                                                    alt="Logo">
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-info">Modifier</button>
-                                                <button type="button" class="btn btn-link text-gray-600 ms-auto"
-                                                    data-bs-dismiss="modal">Annuler</button>
+                                            <div class="mb-3">
+                                                <small>Entreprise</small>
+                                                <P>{{ $liste->libelle_entre }}</P>
                                             </div>
-                                        </form>
+                                            <div class="mb-3">
+                                                <small>Localisation</small>
+                                                <P>{{ $liste->localisation_entre }}</P>
+                                            </div>
+                                            <div class="mb-3">
+                                                <small>Contact</small>
+                                                <p>{{ $liste->contact_entre }}</p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <small>Adresse</small>
+                                                <p>{{ $liste->adresse_entre }}</p>
+                                            </div>
+
+                                            <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+                                            <h4>Représentant</h4>
+                                            <div class="mb-3">
+                                                <small>Nom</small>
+                                                <p>{{ $liste->name }}</p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <small>Prénom</small>
+                                                <p>{{ $liste->prenom }}</p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <small>Téléphone</small>
+                                                <p>{{ $liste->phone }}</p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <small>E-mail</small>
+                                                <p>{{ $liste->email }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-link text-gray-600 ms-auto"
+                                                data-bs-dismiss="modal">Compris</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <a class="btn btn-sm btn-info" href="{{ route('entreprise.show', $liste->identre) }}"
+                                type="button">Modifier</a>
                             <button class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal"
                                 data-bs-target="#modal-delete{{ $liste->identre }}">Supprimer</button>
                             <div class="modal fade" id="modal-delete{{ $liste->identre }}" tabindex="-1"

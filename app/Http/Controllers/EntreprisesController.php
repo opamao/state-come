@@ -40,6 +40,7 @@ class EntreprisesController extends Controller
             'logo' => 'required|file',
             'libelle' => 'required',
             'local' => 'required',
+            'adresse' => 'required',
         ];
         $customMessages = [
             'nom.required' => "Nom représentant obligatoire",
@@ -49,6 +50,7 @@ class EntreprisesController extends Controller
             'libelle.required' => "Nom entreprise obligatoire",
             'local.required' => "Localisation entreprise obligatoire",
             'logo.required|file' => "Logo entreprise obligatoire",
+            'adresse.required|file' => "E-mail entreprise obligatoire",
         ];
         $this->validate($request, $roles, $customMessages);
 
@@ -89,7 +91,11 @@ class EntreprisesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $entreprise = Entreprises::join('users', 'entreprises.identre', '=', 'users.entreprise_id')
+            ->where('entreprises.identre', '=', $id)
+            ->first();
+
+        return view("entreprises.details", compact('entreprise'));
     }
 
     /**
@@ -105,31 +111,71 @@ class EntreprisesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $roles = [
-            'nom' => 'required',
-            'prenom' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
-        ];
-        $customMessages = [
-            'nom.required' => "Veuillez saisir le nom",
-            'prenom.required' => "Veuillez saisir le prénom",
-            'phone.required' => "Veuillez saisir le téléphone",
-            'email.required' => "Veuillez saisir le email",
-        ];
-        $this->validate($request, $roles, $customMessages);
+        switch ($request->controle) {
+            case 'entreprise':
+                $roles = [
+                    'libelle' => 'required',
+                    'local' => 'required',
+                    'adresse' => 'required',
+                ];
+                $customMessages = [
+                    'libelle.required' => "Nom entreprise obligatoire",
+                    'local.required' => "Localisation entreprise obligatoire",
+                    'adresse.required' => "E-mail entreprise obligatoire",
+                ];
+                $this->validate($request, $roles, $customMessages);
 
-        Entreprises::where('id', $id)
-            ->update(
-                [
-                    'name' => $request->nom,
-                    'email' => $request->email,
-                    'prenom' => $request->prenom,
-                    'phone' => $request->phone,
-                ]
-            );
+                if ($request->logo != null) {
+                    $fileLogoWithExtension = $request->file('logo')->getClientOriginalName();
+                    $imageLogo = 'logo_entreprise_' . time() . '_' . '.' . $fileLogoWithExtension;
+                    $request->file('logo')->move(public_path('/logoentreprise'), $imageLogo);
 
-        return back()->with('succes', "La modification a été effectué");
+                    Entreprises::where('identre', $id)
+                        ->update([
+                            'libelle_entre' => $request->libelle,
+                            'logo_entre' => $imageLogo,
+                            'localisation_entre' => $request->local,
+                            'adresse_entre' => $request->adresse,
+                            'contact_entre' => $request->contact,
+                        ]);
+                } else {
+                    Entreprises::where('identre', $id)
+                        ->update([
+                            'libelle_entre' => $request->libelle,
+                            'localisation_entre' => $request->local,
+                            'adresse_entre' => $request->adresse,
+                            'contact_entre' => $request->contact,
+                        ]);
+                }
+                return back()->with('succes', "La modification a été effectué");
+
+            case 'representant':
+                $roles = [
+                    'nom' => 'required',
+                    'prenom' => 'required',
+                    'phone' => 'required',
+                    'email' => 'required',
+                ];
+                $customMessages = [
+                    'nom.required' => "Nom représentant obligatoire",
+                    'prenom.required' => "Prénom représentant obligatoire",
+                    'phone.required' => "Phone représentant obligatoire",
+                    'email.required' => "Email représentant obligatoire",
+                ];
+                $this->validate($request, $roles, $customMessages);
+
+                User::where('id', $id)
+                    ->update([
+                        'name' => $request->nom,
+                        'email' => $request->email,
+                        'prenom' => $request->prenom,
+                        'phone' => $request->phone,
+                    ]);
+                return back()->with('succes', "La modification a été effectué");
+
+            default:
+                return back()->withErrors(["Impossible de mettre a jour vos les informations."]);
+        }
     }
 
     /**
