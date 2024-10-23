@@ -10,8 +10,9 @@ class Objectifs extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date_objectif',
-        'objectif',
+        'date_debut',
+        'date_fin',
+        'quota_ventes',
         'service_id',
         'responsable_id',
      ];

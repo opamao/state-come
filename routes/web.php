@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CommercialController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\EntreprisesController;
+use App\Http\Controllers\RapportsController;
 use App\Http\Controllers\ResponsableController;
 use App\Http\Controllers\SaisirObjectifController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\TachesController;
 use App\Models\Objectifs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,3 +54,6 @@ Route::resource('respos', ResponsableController::class);
 Route::resource('objectifsdg', SaisirObjectifController::class);
 Route::resource('comme', CommercialController::class);
 Route::resource('entreprise', EntreprisesController::class);
+Route::resource('clients', ClientsController::class);
+Route::resource('taches',TachesController::class);
+Route::resource('rapports', RapportsController::class);

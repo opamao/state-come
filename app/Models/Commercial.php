@@ -14,6 +14,8 @@ class Commercial extends Model
         'prenom_come',
         'phone_come',
         'email_come',
+        'zone_geographique_come',
+        'date_embauche_come',
         'password_come',
         'responsable_id',
         'entreprise_id',

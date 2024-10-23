@@ -2,27 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Services;
-use App\Models\User;
+use App\Models\Clients;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
-class ResponsableController extends Controller
+class ClientsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $responsables = User::where("type_user", "responsable")
-            ->where("directeur_id", Auth::user()->id)
-            ->get();
-        $services = Services::where("etat_service", "0")
-        ->where("entreprise_id", Auth::user()->entreprise_id)
-        ->get();
+        $clients = Clients::all();
 
-        return view('respos.resposables', compact('responsables', 'services'));
+        return view('clients.client', compact('clients'));
     }
 
     /**
@@ -40,30 +33,31 @@ class ResponsableController extends Controller
     {
         $roles = [
             'nom' => 'required',
-            'prenom' => 'required',
+            'type' => 'required',
             'phone' => 'required',
             'email' => 'required',
         ];
         $customMessages = [
             'nom.required' => "Veuillez saisir le nom",
-            'prenom.required' => "Veuillez saisir le prénom",
+            'type.required' => "Veuillez sélectionner le type de votre client",
             'phone.required' => "Veuillez saisir le téléphone",
             'email.required' => "Veuillez saisir le email",
         ];
         $this->validate($request, $roles, $customMessages);
 
-        $respo = new User();
-        $respo->name = $request->nom;
-        $respo->email = $request->email;
-        $respo->prenom = $request->prenom;
-        $respo->phone = $request->phone;
-        $respo->type_user = 'responsable';
-        $respo->password = Hash::make('1234567890');
-        $respo->entreprise_id = Auth::user()->entreprise_id;
-        $respo->directeur_id = Auth::user()->id;
-        $respo->save();
+        $client = new Clients();
+        $client->nom_client = $request->nom;
+        $client->email_client = $request->email;
+        $client->type_client = $request->type;
+        $client->phone_client = $request->phone;
+        $client->adresse_client = $request->adresse;
+        $client->entreprise_id = Auth::user()->entreprise_id;
 
-        return back()->with('succes', $request->nom . " a été ajoué");
+        if ($client->save()) {
+            return back()->with('succes', $request->nom . " a été ajoué");
+        } else {
+            return back()->withErrors(["Impossible d'enregistrer votre client. Veuillez reessayer!"]);
+        }
     }
 
     /**
@@ -89,25 +83,26 @@ class ResponsableController extends Controller
     {
         $roles = [
             'nom' => 'required',
-            'prenom' => 'required',
+            'type' => 'required',
             'phone' => 'required',
             'email' => 'required',
         ];
         $customMessages = [
             'nom.required' => "Veuillez saisir le nom",
-            'prenom.required' => "Veuillez saisir le prénom",
+            'type.required' => "Veuillez sélectionner le type de votre client",
             'phone.required' => "Veuillez saisir le téléphone",
             'email.required' => "Veuillez saisir le email",
         ];
         $this->validate($request, $roles, $customMessages);
 
-        User::where('id', $id)
+        Clients::where('idclient', $id)
             ->update(
                 [
-                    'name' => $request->nom,
-                    'email' => $request->email,
-                    'prenom' => $request->prenom,
-                    'phone' => $request->phone,
+                    'nom_client' => $request->nom,
+                    'email_client' => $request->email,
+                    'type_client' => $request->type,
+                    'phone_client' => $request->phone,
+                    'adresse_client' => $request->adresse,
                 ]
             );
 
@@ -119,7 +114,7 @@ class ResponsableController extends Controller
      */
     public function destroy(string $id)
     {
-        User::findOrFail($id)->delete();
+        Clients::findOrFail($id)->delete();
 
         return back()->with('succes', "La suppression a été effectué");
     }

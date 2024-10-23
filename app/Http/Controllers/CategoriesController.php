@@ -103,6 +103,6 @@ class CategoriesController extends Controller
     {
         Categories::findOrFail($id)->delete();
 
-        return back()->with('succes', "La suppression a été efecctué");
+        return back()->with('succes', "La suppression a été effectué");
     }
 }
