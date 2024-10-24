@@ -19,8 +19,8 @@ class ResponsableController extends Controller
             ->where("directeur_id", Auth::user()->id)
             ->get();
         $services = Services::where("etat_service", "0")
-        ->where("entreprise_id", Auth::user()->entreprise_id)
-        ->get();
+            ->where("entreprise_id", Auth::user()->entreprise_id)
+            ->get();
 
         return view('respos.resposables', compact('responsables', 'services'));
     }
@@ -41,14 +41,16 @@ class ResponsableController extends Controller
         $roles = [
             'nom' => 'required',
             'prenom' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
+            'phone' => 'required|unique:users,phone',
+            'email' => 'required|email|unique:users,email',
         ];
         $customMessages = [
             'nom.required' => "Veuillez saisir le nom",
             'prenom.required' => "Veuillez saisir le prénom",
             'phone.required' => "Veuillez saisir le téléphone",
-            'email.required' => "Veuillez saisir le email",
+            'phone.unique' => "Le numéro de téléphone est déjà utilisé. Veuillez essayer un eutre!",
+            'email.required' => "Veuillez saisir l'email",
+            'email.unique' => "L'adresse email est déjà utilisé. Veuillez essayer un autre!",
         ];
         $this->validate($request, $roles, $customMessages);
 
@@ -61,9 +63,12 @@ class ResponsableController extends Controller
         $respo->password = Hash::make('1234567890');
         $respo->entreprise_id = Auth::user()->entreprise_id;
         $respo->directeur_id = Auth::user()->id;
-        $respo->save();
 
-        return back()->with('succes', $request->nom . " a été ajoué");
+        if ($respo->save()) {
+            return back()->with('succes', $request->nom . " a été ajoué");
+        } else {
+            return back()->withErrors(["Une erreur est survenue. Veuillez réessayer!"]);
+        }
     }
 
     /**

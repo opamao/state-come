@@ -132,12 +132,12 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th class="border-gray-200">#</th>
+                    <th class="border-gray-200"></th>
                     <th class="border-gray-200">Responsable</th>
                     <th class="border-gray-200">Contact</th>
                     <th class="border-gray-200">Objectif</th>
                     <th class="border-gray-200">Réalisé</th>
-                    <th class="border-gray-200">%</th>
+                    <th class="border-gray-200"></th>
                     <th class="border-gray-200">Action</th>
                 </tr>
             </thead>
@@ -147,9 +147,10 @@
                         @php
                             $objectif = \App\Models\Objectifs::where('responsable_id', $liste->id)->sum('objectif');
                             $saisir = \App\Models\SaisirObjectif::where('responsable_id', $liste->id)->sum('quantite');
+                            $i = 1;
                         @endphp
                         <td>
-                            {{ $liste->id }}
+                            {{ $i++ }}
                         </td>
                         <td>
                             <span class="fw-normal">{{ $liste->name }} {{ $liste->prenom }}</span>
