@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Services;
+use Illuminate\Support\Facades\Auth;
 
 class ServicesController extends Controller
 {
@@ -13,7 +14,7 @@ class ServicesController extends Controller
     public function index()
     {
 
-        $services = Services::all();
+        $services = Services::where('entreprise_id', '=', Auth::user()->entreprise_id)->get();
 
         return view('services.services', compact('services'));
     }

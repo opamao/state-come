@@ -74,7 +74,7 @@ class CustomAuthController extends Controller
     {
         $listCome = User::where('type_user', 'responsable')->get();
         $nbreCome = User::where('type_user', 'responsable')->count();
-        $sommeObjectif = Objectifs::sum('objectif');
+        $sommeObjectif = Objectifs::sum('quota_ventes');
         $sommeSaisirObjectif = SaisirObjectif::sum('quantite');
 
         // if (Auth::check()) {

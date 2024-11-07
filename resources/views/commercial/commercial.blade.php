@@ -1,5 +1,5 @@
 @extends('layouts.master', [
-    'titre' => 'COMMERCIAL',
+    'titre' => 'TACHES ET RENDEZ-VOUS',
 ])
 
 @section('content')
@@ -40,12 +40,17 @@
                                         placeholder="Son prénom" aria-describedby="emailHelp">
                                 </div>
                                 <div class="mb-3">
-                                    <input placeholder="Son numéro de téléphone" type="tel" required class="form-control"
-                                        name="phone" aria-describedby="emailHelp">
+                                    <input placeholder="Son numéro de téléphone" type="tel" required
+                                        class="form-control" name="phone" aria-describedby="emailHelp">
                                 </div>
                                 <div class="mb-3">
                                     <input placeholder="Son adresse email" type="email" required class="form-control"
                                         name="email" id="email" aria-describedby="emailHelp">
+                                </div>
+                                <div class="mb-3">
+                                    <small>Sa date d'embauche</small>
+                                    <input placeholder="Sa date d'embauche" type="date" required class="form-control"
+                                        name="date" id="date" aria-describedby="dateHelp">
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -54,6 +59,66 @@
                                     data-bs-dismiss="modal">Annuler</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="ms-2 ms-lg-3">
+                <button type="button" class="btn btn-block btn-gray-800 align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#modal-objectif">
+                    <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                        </path>
+                    </svg>
+                    Objectif
+                </button>
+                <div class="modal fade" id="modal-objectif" tabindex="-1" role="dialog" aria-labelledby="modal-default"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h2 class="h6 modal-title">AJOUT D'OBJECTIF</h2>
+                                <button style="background-color: white;" type="button" class="btn-close"
+                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form role="for" action="{{ url('details') }}" method="POST">
+                                @csrf
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <select name="respo" required class="form-select"
+                                            aria-label="Default select example">
+                                            <option value="" selected="">Commercial</option>
+                                            @foreach ($commercial as $comme)
+                                                <option value="{{ $comme->idcome }}">{{ $comme->nom_come }}
+                                                    {{ $comme->prenom_come }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <select name="service" class="form-select" aria-label="Default select example">
+                                            <option value="" selected="">Service</option>
+                                            @foreach ($services as $item)
+                                                <option value="{{ $item->idservice }}">{{ $item->libelle_service }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="date" required class="form-control" name="date">
+                                    </div>
+                                    <div class="mb-3">
+                                        <input placeholder="Objectif" type="number" required class="form-control"
+                                            name="objectif">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-secondary">Ajouter</button>
+                                    <button type="button" class="btn btn-link text-gray-600 ms-auto"
+                                        data-bs-dismiss="modal">Annuler</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,8 +136,9 @@
             <thead>
                 <tr>
                     <th class="border-gray-200">#</th>
-                    <th class="border-gray-200">Responsable</th>
+                    <th class="border-gray-200">Nom & prénom</th>
                     <th class="border-gray-200">Contact</th>
+                    <th class="border-gray-200">Embauche</th>
                     <th class="border-gray-200">Objectif</th>
                     <th class="border-gray-200">Réalisé</th>
                     <th class="border-gray-200">%</th>
@@ -83,17 +149,28 @@
                 @foreach ($commercial as $liste)
                     <tr>
                         @php
-                            $objectif = \App\Models\Objectifs::where('responsable_id', $liste->id)->sum('objectif');
+                            $i = 1;
+                            $objectif = \App\Models\Objectifs::join(
+                                'commercial',
+                                'objectifs.commercial_id',
+                                '=',
+                                'commercial.idcome',
+                            )
+                                ->where('commercial.responsable_id', $liste->id)
+                                ->sum('objectifs.quota_ventes');
                             $saisir = \App\Models\SaisirObjectif::where('responsable_id', $liste->id)->sum('quantite');
                         @endphp
                         <td>
-                            {{ $liste->id }}
+                            {{ $i++ }}
                         </td>
                         <td>
-                            <span class="fw-normal">{{ $liste->name }} {{ $liste->prenom }}</span>
+                            <span class="fw-normal">{{ $liste->nom_come }} <br> {{ $liste->prenom_come }}</span>
                         </td>
                         <td>
-                            <span class="fw-normal">{{ $liste->phone }} <br> {{ $liste->email }}</span>
+                            <span class="fw-normal">{{ $liste->phone_come }} <br> {{ $liste->email_come }}</span>
+                        </td>
+                        <td>
+                            <span class="fw-normal">{{ $liste->date_embauche_come }}</span>
                         </td>
                         <td>
                             <span class="fw-bold">{{ $objectif }}</span>
@@ -122,12 +199,12 @@
                             </div>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-tertiary" href="{{ route('respos.show', $liste->id) }}"
+                            <a class="btn btn-sm btn-tertiary" href="{{ route('comme.show', $liste->idcome) }}"
                                 type="button">Voir</a>
                             <button class="btn btn-sm btn-info" type="button" data-bs-toggle="modal"
-                                data-bs-target="#modal-edit{{ $liste->id }}">Modifier</button>
-                            <div class="modal fade" id="modal-edit{{ $liste->id }}" tabindex="-1" role="dialog"
-                                aria-labelledby="modal-edit{{ $liste->id }}" aria-hidden="true">
+                                data-bs-target="#modal-edit{{ $liste->idcome }}">Modifier</button>
+                            <div class="modal fade" id="modal-edit{{ $liste->idcome }}" tabindex="-1" role="dialog"
+                                aria-labelledby="modal-edit{{ $liste->idcome }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header bg-info text-white">
@@ -135,30 +212,38 @@
                                             <button style="background-color: white;" type="button" class="btn-close"
                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <form role="for" action="{{ route('respos.update', $liste->id) }}"
+                                        <form role="for" action="{{ route('comme.update', $liste->idcome) }}"
                                             method="POST">
                                             @csrf
                                             @method('PATCH')
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <input type="text" value="{{ $liste->name }}" required
+                                                    <input type="text" value="{{ $liste->nom_come }}" required
                                                         class="form-control" name="nom" placeholder="Son nom"
                                                         aria-describedby="emailHelp">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <input type="text" value="{{ $liste->prenom }}" required
+                                                    <input type="text" value="{{ $liste->prenom_come }}" required
                                                         class="form-control" name="prenom" placeholder="Son prénom"
                                                         aria-describedby="emailHelp">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <input value="{{ $liste->phone }}" placeholder="Son téléphone"
+                                                    <input value="{{ $liste->phone_come }}" placeholder="Son téléphone"
                                                         type="tel" required class="form-control" name="phone"
                                                         aria-describedby="emailHelp">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <input value="{{ $liste->email }}" placeholder="Son adresse email"
-                                                        type="email" required class="form-control" name="email"
-                                                        id="email" aria-describedby="emailHelp">
+                                                    <input value="{{ $liste->email_come }}"
+                                                        placeholder="Son adresse email" type="email" required
+                                                        class="form-control" name="email" id="email"
+                                                        aria-describedby="emailHelp">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <small>Sa date d'embauche</small>
+                                                    <input value="{{ $liste->date_embauche_come }}"
+                                                        placeholder="Sa date d'embauche" type="date" required
+                                                        class="form-control" name="date" id="date"
+                                                        aria-describedby="dateHelp">
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -171,9 +256,9 @@
                                 </div>
                             </div>
                             <button class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal"
-                                data-bs-target="#modal-delete{{ $liste->id }}">Supprimer</button>
-                            <div class="modal fade" id="modal-delete{{ $liste->id }}" tabindex="-1" role="dialog"
-                                aria-labelledby="modal-delete{{ $liste->id }}" aria-hidden="true">
+                                data-bs-target="#modal-delete{{ $liste->idcome }}">Supprimer</button>
+                            <div class="modal fade" id="modal-delete{{ $liste->idcome }}" tabindex="-1" role="dialog"
+                                aria-labelledby="modal-delete{{ $liste->idcome }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header bg-danger text-white">
@@ -181,7 +266,7 @@
                                             <button style="background-color: white;" type="button" class="btn-close"
                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <form role="for" action="{{ route('respos.destroy', $liste->id) }}"
+                                        <form role="for" action="{{ route('comme.destroy', $liste->idcome) }}"
                                             method="POST">
                                             @csrf
                                             @method('DELETE')

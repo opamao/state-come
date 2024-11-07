@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commercial;
 use Illuminate\Http\Request;
 
 class TachesController extends Controller
@@ -11,7 +12,8 @@ class TachesController extends Controller
      */
     public function index()
     {
-        //
+        $taches = Commercial::where('');
+        return view('taches.taches', compact('taches'));
     }
 
     /**

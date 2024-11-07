@@ -14,7 +14,8 @@ class Objectifs extends Model
         'date_fin',
         'quota_ventes',
         'service_id',
-        'responsable_id',
+        'commercial_id',
+        'client_id',
      ];
 
      protected $primaryKey = 'idobjectif';

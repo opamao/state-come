@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('quota_ventes')->comment("Objectif de ventes à atteindre");
             $table->unsignedBigInteger('service_id')->nullable();
             $table->foreign('service_id')->references('idservice')->on('services')->onDelete('cascade');
+            $table->unsignedBigInteger('client_id')->nullable();
+            $table->foreign('client_id')->references('idclient')->on('clients')->onDelete('cascade');
             $table->unsignedBigInteger('commercial_id');
             $table->foreign('commercial_id')->references('idcome')->on('commercial')->onDelete('cascade');
             $table->timestamps();
@@ -31,9 +33,10 @@ return new class extends Migration
     {
         Schema::dropIfExists('objectifs');
         Schema::table('objectifs', function (Blueprint $table) {
-            $table->dropForeign(['service_id', 'commercial_id']);
+            $table->dropForeign(['service_id', 'commercial_id', 'client_id']);
             $table->dropColumn('service_id');
             $table->dropColumn('commercial_id');
+            $table->dropColumn('client_id');
         });
     }
 };

@@ -12,6 +12,7 @@ class Services extends Model
     protected $fillable = [
         'libelle_service',
         'etat_service',
+        'entreprise_id',
      ];
 
      protected $primaryKey = 'idservice';

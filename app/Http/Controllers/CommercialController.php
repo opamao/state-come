@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commercial;
+use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,9 +15,15 @@ class CommercialController extends Controller
      */
     public function index()
     {
-        $commercial = Commercial::where("responsable_id", Auth::user()->id)->get();
+        if (Auth::user()->type_user == 'directeur') {
+            $commercial = Commercial::where("entreprise_id", Auth::user()->entreprise_id)->get();
+        } else {
+            $commercial = Commercial::where("responsable_id", Auth::user()->id)->get();
+        }
 
-        return view('commercial.commercial', compact('commercial'));
+        $services = Services::where('entreprise_id', '=', Auth::user()->entreprise_id)->get();
+
+        return view('commercial.commercial', compact('commercial', 'services'));
     }
 
     /**
@@ -37,22 +44,25 @@ class CommercialController extends Controller
             'prenom' => 'required',
             'phone' => 'required',
             'email' => 'required',
+            'date' => 'required',
         ];
         $customMessages = [
-            'nom.required' => "Veuillez saisir le nom",
-            'prenom.required' => "Veuillez saisir le prénom",
-            'phone.required' => "Veuillez saisir le téléphone",
-            'email.required' => "Veuillez saisir le email",
+            'nom.required' => "Veuillez saisir son nom",
+            'prenom.required' => "Veuillez saisir son prénom",
+            'phone.required' => "Veuillez saisir son numéro de téléphone",
+            'email.required' => "Veuillez saisir son adresse email",
+            'date.required' => "Veuillez sélectionner sa date d'embauche",
         ];
         $this->validate($request, $roles, $customMessages);
 
         $respo = new Commercial();
         $respo->nom_come = $request->nom;
-        $respo->prenom_come = $request->email;
-        $respo->phone_come = $request->prenom;
-        $respo->email_come = $request->phone;
-        $respo->responsable_id = 'responsable';
-        $respo->entreprise_id = 'responsable';
+        $respo->prenom_come = $request->prenom;
+        $respo->phone_come = $request->phone;
+        $respo->email_come = $request->email;
+        $respo->date_embauche_come = $request->date;
+        $respo->responsable_id = Auth::user()->id;
+        $respo->entreprise_id = Auth::user()->entreprise_id;
         $respo->password_come = Hash::make('1234567890');
         $respo->save();
 
@@ -80,7 +90,34 @@ class CommercialController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $roles = [
+            'nom' => 'required',
+            'prenom' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'date' => 'required',
+        ];
+        $customMessages = [
+            'nom.required' => "Son nom est obligatoire",
+            'prenom.required' => "Son prénom est obligatoire",
+            'phone.required' => "Son numéro de téléphone est obligatoire",
+            'email.required' => "Son adresse email est obligatoire",
+            'date.required' => "Sa date d'embauche est obligatoire",
+        ];
+        $this->validate($request, $roles, $customMessages);
+
+        Commercial::where('idcome', $id)
+            ->update(
+                [
+                    'nom_come' => $request->nom,
+                    'prenom_come' => $request->prenom,
+                    'phone_come' => $request->phone,
+                    'email_come' => $request->email,
+                    'date_embauche_come' => $request->date,
+                ]
+            );
+
+        return back()->with('succes', "La modification a été effectué");
     }
 
     /**
@@ -88,6 +125,8 @@ class CommercialController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Commercial::findOrFail($id)->delete();
+
+        return back()->with('succes', "La suppression a été effectué");
     }
 }

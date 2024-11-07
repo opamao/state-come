@@ -156,9 +156,14 @@
                         @foreach ($listCome as $list)
                             <tr>
                                 @php
-                                    $objectif = \App\Models\Objectifs::where('responsable_id', $list->id)->sum(
-                                        'objectif',
-                                    );
+                                    $objectif = \App\Models\Objectifs::join(
+                                        'commercial',
+                                        'objectifs.commercial_id',
+                                        '=',
+                                        'commercial.idcome',
+                                    )
+                                        ->where('commercial.responsable_id', $list->id)
+                                        ->sum('objectifs.quota_ventes');
                                     $saisir = \App\Models\SaisirObjectif::where('responsable_id', $list->id)->sum(
                                         'quantite',
                                     );

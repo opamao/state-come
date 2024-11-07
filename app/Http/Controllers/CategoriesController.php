@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use App\Models\Services;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoriesController extends Controller
 {
@@ -13,9 +14,12 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $services = Services::where('etat_service', 0)->get();
+        $services = Services::where('entreprise_id', '=', Auth::user()->entreprise_id)
+            ->where('etat_service', '=', 0)
+            ->get();
 
         $categories = Categories::join('services', 'categories.service_id', '=', 'services.idservice')
+            ->where('services.entreprise_id', '=', Auth::user()->entreprise_id)
             ->select('categories.*', 'services.libelle_service')
             ->get();
 

@@ -7,7 +7,6 @@
         <div class="d-block mb-4 mb-md-0">
 
             <h2 class="h4">Responsable commercial</h2>
-            <p class="mb-0">Your web analytics dashboard template.</p>
         </div>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-block btn-gray-800 align-items-center" data-bs-toggle="modal"
@@ -57,68 +56,6 @@
                     </div>
                 </div>
             </div>
-            <div class="ms-2 ms-lg-3">
-                <button type="button" class="btn btn-block btn-gray-800 align-items-center" data-bs-toggle="modal"
-                    data-bs-target="#modal-objectif">
-                    <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6">
-                        </path>
-                    </svg>
-                    Objectif
-                </button>
-                <div class="modal fade" id="modal-objectif" tabindex="-1" role="dialog" aria-labelledby="modal-default"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header bg-primary text-white">
-                                <h2 class="h6 modal-title">AJOUT D'OBJECTIF</h2>
-                                <button style="background-color: white;" type="button" class="btn-close"
-                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form role="for" action="{{ url('details') }}" method="POST">
-                                @csrf
-                                <div class="modal-body">
-                                    {{-- le mot de passe est genere automatiquement --}}
-                                    <div class="mb-3">
-                                        <select name="respo" required class="form-select"
-                                            aria-label="Default select example">
-                                            <option value="" selected="">Responsable</option>
-                                            @foreach ($responsables as $respo)
-                                                <option value="{{ $respo->id }}">{{ $respo->name }}
-                                                    {{ $respo->prenom }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <select name="service" required class="form-select"
-                                            aria-label="Default select example">
-                                            <option value="" selected="">Service</option>
-                                            @foreach ($services as $item)
-                                                <option value="{{ $item->idservice }}">{{ $item->libelle_service }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input type="date" required class="form-control" name="date">
-                                    </div>
-                                    <div class="mb-3">
-                                        <input placeholder="Objectif" type="number" required class="form-control"
-                                            name="objectif">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-secondary">Ajouter</button>
-                                    <button type="button" class="btn btn-link text-gray-600 ms-auto"
-                                        data-bs-dismiss="modal">Annuler</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="btn-group ms-2 ms-lg-3">
                 {{-- <button type="button" class="btn btn-sm btn-outline-gray-600">Share</button> --}}
                 <button type="button" class="btn btn-sm btn-outline-gray-600">Exporter</button>
@@ -145,7 +82,14 @@
                 @foreach ($responsables as $liste)
                     <tr>
                         @php
-                            $objectif = \App\Models\Objectifs::where('responsable_id', $liste->id)->sum('objectif');
+                            $objectif = \App\Models\Objectifs::join(
+                                'commercial',
+                                'objectifs.commercial_id',
+                                '=',
+                                'commercial.idcome',
+                            )
+                                ->where('commercial.responsable_id', $liste->id)
+                                ->sum('objectifs.quota_ventes');
                             $saisir = \App\Models\SaisirObjectif::where('responsable_id', $liste->id)->sum('quantite');
                             $i = 1;
                         @endphp

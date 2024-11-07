@@ -1,5 +1,5 @@
 @extends('layouts.master', [
-    'titre' => 'RESPONSABLES',
+    'titre' => 'SERVICES',
 ])
 
 @section('content')
@@ -7,7 +7,7 @@
         <div class="d-block mb-4 mb-md-0">
 
             <h2 class="h4">Services</h2>
-            <p class="mb-0">Your web analytics dashboard template.</p>
+            {{-- <p class="mb-0">Your web analytics dashboard template.</p> --}}
         </div>
         <div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-block btn-gray-800 align-items-center" data-bs-toggle="modal"

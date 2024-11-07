@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('prenom_come');
             $table->string('phone_come');
             $table->string('email_come');
-            $table->string('zone_geographique_come');
+            $table->string('zone_geographique_come')->nullable();
             $table->string('date_embauche_come');
             $table->string('password_come');
             $table->unsignedBigInteger('responsable_id');
