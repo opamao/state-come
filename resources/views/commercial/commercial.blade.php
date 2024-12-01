@@ -105,10 +105,26 @@
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <input type="date" required class="form-control" name="date">
+                                        <select name="client" class="form-select" aria-label="Default select example">
+                                            <option value="" selected="">Client</option>
+                                            @foreach ($clients as $clie)
+                                                <option value="{{ $clie->idclient }}">{{ $clie->nom_client }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="mb-3 col-md-6">
+                                            <small for="">Date début</small>
+                                            <input type="date" required class="form-control" name="dateDebut">
+                                        </div>
+                                        <div class="mb-3 col-md-6">
+                                            <small for="">Date fin</small>
+                                            <input type="date" required class="form-control" name="dateFin">
+                                        </div>
                                     </div>
                                     <div class="mb-3">
-                                        <input placeholder="Objectif" type="number" required class="form-control"
+                                        <input placeholder="Quota vente" type="number" required class="form-control"
                                             name="objectif">
                                     </div>
                                 </div>

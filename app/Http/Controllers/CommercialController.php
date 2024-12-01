@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clients;
 use App\Models\Commercial;
 use App\Models\Services;
 use Illuminate\Http\Request;
@@ -22,8 +23,9 @@ class CommercialController extends Controller
         }
 
         $services = Services::where('entreprise_id', '=', Auth::user()->entreprise_id)->get();
+        $clients = Clients::where('entreprise_id', '=', Auth::user()->entreprise_id)->get();
 
-        return view('commercial.commercial', compact('commercial', 'services'));
+        return view('commercial.commercial', compact('commercial', 'services', 'clients'));
     }
 
     /**
@@ -74,7 +76,9 @@ class CommercialController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $comme = Commercial::where('idcome', '=', $id)->first();
+    
+        return view('commercial.details', compact('comme'));
     }
 
     /**

@@ -39,15 +39,15 @@ Route::get('cate/{id}', [SaisirObjectifController::class, 'fetch']);
 Route::post('/details', function (Request $request) {
 
     $saisir = new Objectifs();
-    $saisir->date_debut = $request->date;
-    $saisir->date_fin = $request->date;
+    $saisir->date_debut = $request->dateDebut;
+    $saisir->date_fin = $request->dateFin;
     $saisir->quota_ventes = $request->objectif;
     $saisir->service_id = $request->service;
     $saisir->commercial_id = $request->respo;
-    $saisir->client_id = $request->respo;
+    $saisir->client_id = $request->client;
     $saisir->save();
 
-    return back()->with('succes', "Objectif a été ajoué");
+    return back()->with('succes', "Objectif a été attribué");
 });
 
 Route::resource('services', ServicesController::class);

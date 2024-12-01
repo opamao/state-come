@@ -6,7 +6,7 @@
             </p>
         </div>
         <div class="col-12 col-md-6 text-center text-lg-end">
-            <p class="mb-0">❤️ <a class=" fw-normal" href="#" target="_blank">Terrific Tech - v1.0.0</a></p>
+            <p class="mb-0">❤️ <a class=" fw-normal" href="https://www.aptiotech.com" target="_blank">AptioTech - v1.0.0</a></p>
         </div>
     </div>
 </footer>
